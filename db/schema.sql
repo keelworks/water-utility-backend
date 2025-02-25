@@ -7,6 +7,7 @@ SET search_path TO water_management;
 -- Step 3: Create Users Table
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
+	firebase_uid VARCHAR(128) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     profile_picture TEXT,
     phone_number VARCHAR(20),
@@ -88,3 +89,10 @@ CREATE TABLE user_bookmarks (
     article_id INT REFERENCES water_management.articles(article_id) ON DELETE CASCADE,
     saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO roles (role_name) VALUES
+  ('admin'),
+  ('technician'),
+  ('consumer');
+-- etc.
+

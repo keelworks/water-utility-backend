@@ -1,0 +1,51 @@
+// models/User.js
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+
+const User = sequelize.define('User', {
+  user_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  firebase_uid: {
+    type: DataTypes.STRING(128),
+    allowNull: false,
+    unique: true,
+  },
+  email: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    unique: true,
+  },
+  profile_picture: {
+    type: DataTypes.TEXT,
+  },
+  phone_number: {
+    type: DataTypes.STRING(20),
+  },
+  address: {
+    type: DataTypes.TEXT,
+  },
+  password_hash: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.ENUM('active', 'inactive'),
+    defaultValue: 'active',
+  },
+  water_account_id: {
+    type: DataTypes.INTEGER,
+    unique: true,
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+}, {
+  tableName: 'users', // Maps this model to the "users" table in your DB
+  timestamps: false,  // Disable Sequelize's auto-added timestamps if you don't use them
+});
+
+module.exports = User;
