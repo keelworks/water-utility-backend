@@ -1,7 +1,7 @@
 // middlewares/authMiddleware.js
 const admin = require('../config/firebaseAdmin');
 
-function authMiddleware() {
+function authMiddleware(requiredRole = 'consumer') {
   return async (req, res, next) => {
     try {
       const authHeader = req.headers.authorization || '';
@@ -14,10 +14,10 @@ function authMiddleware() {
        const decoded = await admin.auth().verifyIdToken(token);
        req.user = decoded; // e.g. { uid: ..., email: ..., role: 'admin' }
 
-      // // If a route requires a specific role, check it
-      // if (requiredRole && decoded.role !== requiredRole) {
-      //   return res.status(403).json({ error: `Forbidden - Requires ${requiredRole} role` });
-      // }
+       const userRoles = decoded.roles || []; 
+       if (!userRoles.includes(requiredRole)) {
+         return res.status(403).json({ error: `Forbidden - Requires role: ${requiredRole}` });
+       }
 
       next();
     } catch (err) {
