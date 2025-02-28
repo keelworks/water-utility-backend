@@ -11,7 +11,9 @@ function authMiddleware(requiredRole = 'consumer') {
       }
 
       // Verify the token with Firebase
+      
        const decoded = await admin.auth().verifyIdToken(token);
+       console.log("Custom Claims:", decoded);
        req.user = decoded; // e.g. { uid: ..., email: ..., role: 'admin' }
 
        const userRoles = decoded.roles || []; 

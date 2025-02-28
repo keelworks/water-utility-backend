@@ -1,6 +1,7 @@
 // services/authService.js
 const admin = require('../config/firebaseAdmin');
 const User = require('../models/User');
+const Role = require('../models/Role');
 // If you want password hashing, e.g. 'bcrypt':
 // const bcrypt = require('bcrypt');
 
