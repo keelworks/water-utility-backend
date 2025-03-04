@@ -9,12 +9,12 @@ const User = require('../models/User');
  */
 exports.signUp = async (req, res) => {
   try {
-    const { email, password, phone, address } = req.body;
+    const { email, password, phone, address, roles } = req.body;
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-    const newUser = await registerUser({ email, password, phone, address });
+    const newUser = await registerUser({ email, password, phone, address, roles });
     return res.json({ message: 'Signup successful', user: newUser });
   } catch (error) {
     console.error('signUp error:', error);

@@ -22,7 +22,7 @@ services:
       - "6379:6379"
       
   backend:
-    image: node:16
+    image: node:18 
     container_name: water_service_backend
     working_dir: /app
     volumes:
@@ -32,7 +32,7 @@ services:
       - "3000:3000"
     environment:
       - MONGO_URI=mongodb://mongo:27017/water_service_db
-      - POSTGRES_URI=postgresql://postgres:password@postgres:54321/water_service_db
+      - POSTGRES_URI=postgresql://postgres:password@postgres:5432/water_service_db
       - REDIS_URI=redis://redis:6379
     command: sh -c "npm install && npm start"
     depends_on:
