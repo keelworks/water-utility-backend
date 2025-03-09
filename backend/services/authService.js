@@ -6,10 +6,11 @@ const Role = require('../models/Role');
 // const bcrypt = require('bcrypt');
 
 // roles = ['consumer'] is a default value
-async function registerUser({ email, password, phone, address, roles = ['consumer'] }) {
+async function registerUser({ email, password, phone, address, role }) {
   // 1. Create user in Firebase
   const userRecord = await admin.auth().createUser({ email, password });
   const firebaseUid = userRecord.uid;
+  const roles = [role];
 
   // Correct way to set custom claims:
   await admin.auth().setCustomUserClaims(firebaseUid, { roles });
@@ -30,9 +31,9 @@ async function registerUser({ email, password, phone, address, roles = ['consume
     // ...other fields
   });
   // The association: User.belongsToMany(Role, { through: 'user_roles' })
-  const role = await Role.findOne({ where: { role_name: 'consumer' } });
+  const dbRole = await Role.findOne({ where: { role_name: role } });
   if (role) {
-    await user.addRole(role);
+    await user.addRole(dbRole);
   }
 
 
