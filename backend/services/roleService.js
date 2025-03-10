@@ -36,6 +36,8 @@ async function updateUserRoleAndClaims(firebaseUid, roleName, assign = true) {
   // userWithRoles.Roles is an array of role objects
   const allRoleNames = userWithRoles.Roles.map(r => r.role_name);
 
+  console.log(allRoleNames);
+  
   // 5. Update Firebase custom claims
   await admin.auth().setCustomUserClaims(firebaseUid, {
     roles: allRoleNames,

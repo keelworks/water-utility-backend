@@ -1,0 +1,22 @@
+// middlewares/aclRoleMiddleware.js
+module.exports = (req, res, next) => {
+  if (!req.user) {
+    req.decoded = { role: 'public' };
+    console.log('[DEBUG] No authenticated user; assigned role: public');
+  } else {
+    const roles = req.user.roles;
+    let assignedRole;
+    if (req.url.startsWith('/api/admin')) {
+      assignedRole = roles.includes('admin') ? 'admin' : roles[0];
+    } else if (req.url.startsWith('/api/technician')) {
+      assignedRole = roles.includes('technician') ? 'technician' : roles[0];
+    } else if (req.url.startsWith('/api/user')) {
+      assignedRole = roles.includes('consumer') ? 'consumer' : roles[0];
+    } else {
+      assignedRole = roles[0];
+    }
+    req.decoded = { role: assignedRole };
+    console.log('[DEBUG] For URL:', req.url, 'assigned role:', assignedRole);
+  }
+  next();
+};
