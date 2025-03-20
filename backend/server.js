@@ -4,12 +4,15 @@ const express = require('express');
 const cors = require('cors');
 const { swaggerUi, specs } = require('./config/swagger');
 
+const { errorHandler } = require("./middlewares/exceptionMiddleware")
+
 // Route imports
 const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 
 // Basic route for health check
 app.get('/', (req, res) => {
@@ -20,9 +23,28 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Auth endpoints
 app.use('/api/auth', authRoutes);
 
+// Error handling
+app.all('*', (req, res, next) => {
+  next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`));
+});
+
+app.use(errorHandler);
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+});
+
+// Unhandled rejection/exception handler
+process.on('unhandledRejection', (err) => {
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  server.close(() => {
+      process.exit(1);
+  });
+}).on('uncaughtException', err => {
+  logger.error(`Uncaught Exception thrown`, err);
+  process.exit(1);
 });
