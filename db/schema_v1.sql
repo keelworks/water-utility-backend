@@ -108,7 +108,7 @@ CREATE TABLE water_connection_accounts (
     address_id INTEGER REFERENCES addresses(address_id) ON DELETE RESTRICT,
     meter_number VARCHAR(50),
     installation_date DATE,
-    connection_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (connection_status IN ('active', 'disconnected', 'pending')),
+    connection_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (connection_status IN ('active', 'disconnected', 'pending', 'paused')),
     billing_cycle VARCHAR(20) NOT NULL DEFAULT 'monthly' CHECK (billing_cycle IN ('monthly', 'quarterly')),
     connection_type VARCHAR(20) NOT NULL DEFAULT 'postpaid' CHECK (connection_type IN ('prepaid', 'postpaid')),
     meter_reading_method VARCHAR(20) NOT NULL DEFAULT 'manual' CHECK (meter_reading_method IN ('manual', 'smart')),
