@@ -5,7 +5,7 @@ const cors = require('cors');
 const { swaggerUi, specs } = require('./config/swagger');
 const logger = require("./config/logger")
 // const pinoHttp = require("pino-http")
-
+const { NotFoundError, ValidationError } = require('./Errors');
 
 
 const { errorHandler } = require("./middlewares/exceptionMiddleware")
@@ -32,7 +32,7 @@ app.use('/api/auth', authRoutes);
 
 // Error handling
 app.all('*', (req, res, next) => {
-  next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`));
+  next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`,));
 });
 
 app.use(errorHandler);

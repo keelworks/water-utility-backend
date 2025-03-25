@@ -1,3 +1,4 @@
+const { AppError } = require("./AppError");
 // Forbidden Error
 class ForbiddenError extends AppError {
     constructor(message) {
@@ -5,3 +6,4 @@ class ForbiddenError extends AppError {
         this.name = "FORBIDDEN_ERROR";
     }
 }
+module.exports = ForbiddenError;

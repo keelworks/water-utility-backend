@@ -1,3 +1,5 @@
+const { AppError } = require("./AppError");
+
 // Unauthorized Error
 class UnauthorizedError extends AppError {
     constructor(message) {
@@ -6,3 +8,5 @@ class UnauthorizedError extends AppError {
         this.location ='/loign'
     }
 }
+
+module.exports = UnauthorizedError;

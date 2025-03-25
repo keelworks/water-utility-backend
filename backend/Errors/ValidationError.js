@@ -1,4 +1,4 @@
-
+const { AppError } = require("./AppError");
 // Validation Error
 class ValidationError extends AppError {
     constructor(message) {
@@ -6,3 +6,4 @@ class ValidationError extends AppError {
         this.name = "VALIDATION_ERROR";
     }
 }
+module.exports = ValidationError;
