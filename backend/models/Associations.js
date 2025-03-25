@@ -1,12 +1,14 @@
-const User = require('./User');
-const Role = require('./Role');
-const UserDetails = require('./UserDetails');
-const Address = require('./Address');
-const WaterConnectionAccount = require('./WaterConnectionAccount');
-const WaterService = require('./WaterServices');
-
+const Address = require("./Address");
+const Role = require("./Role");
+const User = require("./User");
+const UserDetails = require("./UserDetails");
+const WaterConnectionAccount = require("./WaterConnectionAccount");
+const WaterService = require("./WaterServices");
 
 // Define associations
+User.belongsTo(Role, { foreignKey: 'role_id' });
+Role.hasMany(User, { foreignKey: 'role_id' });
+
 User.belongsToMany(Role, {
     through: 'ruser_rolesoles',
     foreignKey: 'user_id',
@@ -44,4 +46,4 @@ module.exports = {
     Address,
     WaterService,
     WaterConnectionAccount
-};
+}
