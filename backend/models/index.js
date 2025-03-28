@@ -8,10 +8,10 @@ const WaterService = require('./WaterServices');
 
 // Define associations
 User.belongsToMany(Role, {
-    through: 'ruser_rolesoles',
+    through: 'user_roles',
     foreignKey: 'user_id',
     otherKey: 'role_id',
-    timestamps: false,
+    timestamps: true,
   });
   Role.belongsToMany(User, {
     through: 'user_roles',

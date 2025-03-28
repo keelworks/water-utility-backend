@@ -127,6 +127,8 @@ CREATE UNIQUE INDEX idx_utility_service_number ON water_connection_accounts(util
 CREATE TABLE user_roles (
     user_id INT REFERENCES water_management.users(user_id) ON DELETE CASCADE,
     role_id INT REFERENCES water_management.roles(role_id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, role_id)
 );
 
