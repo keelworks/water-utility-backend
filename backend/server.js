@@ -1,24 +1,28 @@
 // server.js
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const { swaggerUi, specs } = require('./config/swagger');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const { swaggerUi, specs } = require("./config/swagger");
 
 // Route imports
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // Basic route for health check
-app.get('/', (req, res) => {
-  res.send('Water Utility Auth Service is Running...');
+app.get("/", (req, res) => {
+  res.send("Water Utility Auth Service is Running...");
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 // Auth endpoints
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Start server
 const PORT = process.env.PORT || 3000;
