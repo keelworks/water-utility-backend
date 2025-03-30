@@ -12,6 +12,10 @@ const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 app.use(cors());
 app.use(express.json());
+// app.use(pinoHttp({
+//   logger,
+// }))
+
 
 // Basic route for health check
 app.get("/", (req, res) => {
@@ -24,9 +28,29 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 
+// Error handling
+app.all('*', (req, res, next) => {
+  next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`,));
+});
+
+app.use(errorHandler);
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+  logger.info("Logger Initiated..");
+});
+
+// Unhandled rejection/exception handler
+process.on('unhandledRejection', (err) => {
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  server.close(() => {
+      process.exit(1);
+  });
+}).on('uncaughtException', err => {
+  logger.error(`Uncaught Exception thrown`, err);
+  process.exit(1);
 });

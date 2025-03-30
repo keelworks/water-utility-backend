@@ -1,17 +1,19 @@
-const User = require('./User');
-const Role = require('./Role');
-const UserDetails = require('./UserDetails');
-const Address = require('./Address');
-const WaterConnectionAccount = require('./WaterConnectionAccount');
-const WaterService = require('./WaterServices');
-
+const Address = require("./Address");
+const Role = require("./Role");
+const User = require("./User");
+const UserDetails = require("./UserDetails");
+const WaterConnectionAccount = require("./WaterConnectionAccount");
+const WaterService = require("./WaterServices");
 
 // Define associations
+User.belongsTo(Role, { foreignKey: 'role_id' });
+Role.hasMany(User, { foreignKey: 'role_id' });
+
 User.belongsToMany(Role, {
-    through: 'user_roles',
+    through: 'ruser_rolesoles',
     foreignKey: 'user_id',
     otherKey: 'role_id',
-    timestamps: true,
+    timestamps: false,
   });
   Role.belongsToMany(User, {
     through: 'user_roles',
@@ -37,28 +39,11 @@ Address.hasMany(WaterConnectionAccount, { foreignKey: 'address_id' });
 WaterConnectionAccount.belongsTo(Address, { foreignKey: 'address_id' });
 
 
-// Admin activity associations
-AdminActivity.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
-
-// Admin notification associations
-AdminNotification.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
-
-// Admin settings associations
-AdminSettings.belongsTo(User, {
-  foreignKey: "updated_by",
-  as: "updatedByUser",
-});
-
 module.exports = {
-  User,
-  Role,
-  AdminActivity,
-  AdminSettings,
-  AdminNotification,
-};
+    User,
+    UserDetails,
+    Role,
+    Address,
+    WaterService,
+    WaterConnectionAccount
+}
