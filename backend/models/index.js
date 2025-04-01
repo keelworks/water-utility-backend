@@ -36,12 +36,29 @@ WaterConnectionAccount.belongsTo(WaterService, { foreignKey: 'service_id' });
 Address.hasMany(WaterConnectionAccount, { foreignKey: 'address_id' });
 WaterConnectionAccount.belongsTo(Address, { foreignKey: 'address_id' });
 
+// Admin activity associations
+AdminActivity.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+// Admin notification associations
+AdminNotification.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+// Admin settings associations
+AdminSettings.belongsTo(User, {
+  foreignKey: "updated_by",
+  as: "updatedByUser",
+});
 
 module.exports = {
-    User,
-    UserDetails,
-    Role,
-    Address,
-    WaterService,
-    WaterConnectionAccount
+  User,
+  Role,
+  AdminActivity,
+  AdminSettings,
+  AdminNotification,
+
 };
