@@ -1,8 +1,15 @@
 // server.js
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const { swaggerUi, specs } = require("./config/swagger");
+
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const { swaggerUi, specs } = require('./config/swagger');
+const logger = require("./config/logger")
+// const pinoHttp = require("pino-http")
+const { NotFoundError, ValidationError } = require('./Errors');
+
+
+const { errorHandler } = require("./middlewares/exceptionMiddleware")
 
 // Route imports
 const authRoutes = require("./routes/authRoutes");
@@ -27,6 +34,13 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
+
+// Error handling
+app.all('*', (req, res, next) => {
+  next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`,));
+});
+
+app.use(errorHandler);
 
 // Error handling
 app.all('*', (req, res, next) => {
