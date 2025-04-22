@@ -64,7 +64,7 @@ CREATE TABLE user_details (
 -- Create Addresses table
 CREATE TABLE addresses (
     address_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES user_details(user_detail_id) ON DELETE CASCADE,
     -- address_type VARCHAR(20) NOT NULL CHECK (address_type IN ('billing', 'service', 'mailing')),
     address_line_1 VARCHAR(255) NOT NULL,
     address_line_2 VARCHAR(255),
