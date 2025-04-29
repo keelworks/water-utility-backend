@@ -3,7 +3,7 @@ const Role = require('./Role');
 const UserDetails = require('./UserDetails');
 const Address = require('./Address');
 const WaterConnectionAccount = require('./WaterConnectionAccount');
-const WaterService = require('./WaterServices');
+const WaterService = require('./WaterService');
 
 
 // Define associations
@@ -24,8 +24,8 @@ User.belongsToMany(Role, {
 User.hasOne(UserDetails, { foreignKey: 'user_id' });
 UserDetails.belongsTo(User, { foreignKey: 'user_id' });
 
-UserDetails.hasMany(Address, { foreignKey: 'user_detail_id' });
-Address.belongsTo(UserDetails, { foreignKey: 'user_detail_id' });
+UserDetails.hasMany(Address, { foreignKey: 'user_id' });
+Address.belongsTo(UserDetails, { foreignKey: 'user_id' });
 
 User.hasMany(WaterConnectionAccount, { foreignKey: 'user_id' });
 WaterConnectionAccount.belongsTo(User, { foreignKey: 'user_id' });

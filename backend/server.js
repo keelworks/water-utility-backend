@@ -11,7 +11,7 @@ const { NotFoundError, ValidationError } = require('./Errors');
 const { errorHandler } = require("./middlewares/exceptionMiddleware")
 
 // Route imports
-const authRoutes = require('./routes/authRoutes');
+const routes = require('./routes/');
 
 const app = express();
 app.use(cors());
@@ -28,7 +28,8 @@ app.get('/', (req, res) => {
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Auth endpoints
-app.use('/api/auth', authRoutes);
+app.use('/api/', routes);
+
 
 // Error handling
 app.all('*', (req, res, next) => {

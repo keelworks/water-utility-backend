@@ -6,6 +6,7 @@ const Role = require('../models/Role');
 const sequelize = require('../config/db');
 const logger = require('../config/logger'); // Assuming you have a logger here
 const { NotFoundError, ValidationError } = require('../Errors');
+const WaterService = require('../models/WaterService'); // Assuming you have a WaterService model
 
 async function registerUser({ email, password, phone, address, role }) {
   let transaction = null;
@@ -34,16 +35,14 @@ async function registerUser({ email, password, phone, address, role }) {
     firebaseUid = userRecord.uid;
     const roles = [role];
 
-    // 2️⃣ Set custom claims in Firebase
-    await admin.auth().setCustomUserClaims(firebaseUid, { roles });
+    
 
-    // 3️⃣ Hash password locally (if storing it in DB)
+    // 2️⃣ Hash password locally (if storing it in DB)
     const passwordHash = 'PLACEHOLDER';
 
-    // 4️⃣ Create user in 'users' table via Sequelize
+    // 3️⃣ Create user in 'users' table via Sequelize
     const user = await User.create(
       {
-        firebase_uid: firebaseUid,
         email,
         password_hash: passwordHash,
         phone_number: phone,
@@ -51,6 +50,9 @@ async function registerUser({ email, password, phone, address, role }) {
       },
       { transaction }
     );
+
+    // 4️⃣Set custom claims in Firebase
+    await admin.auth().setCustomUserClaims(firebaseUid, { roles , user: user.user_id });
 
     // 5️⃣ Assign role in 'user_roles' (many-to-many association)
     const dbRole = await Role.findOne({ where: { role_name: role } });
@@ -80,4 +82,16 @@ async function registerUser({ email, password, phone, address, role }) {
   }
 }
 
-module.exports = {registerUser};
+
+async function getWaterServices() {
+  try {
+    const waterServices = await WaterService.findAll();
+    return waterServices;
+  } catch (error) {
+    logger.error('Error fetching water services:', error);
+    throw new Error('Error fetching water services');
+  }
+}
+
+
+module.exports = {registerUser, getWaterServices};

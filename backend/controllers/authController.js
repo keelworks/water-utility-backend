@@ -1,5 +1,5 @@
 // controllers/authController.js
-const { registerUser } = require('../services/authService');
+const { registerUser, getWaterServices } = require('../services/authService');
 const admin = require('../config/firebaseAdmin');
 const User = require('../models/User');
 
@@ -18,6 +18,16 @@ exports.signUp = async (req, res) => {
     return res.json({ message: 'Signup successful', user: newUser });
   } catch (error) {
     console.error('signUp error:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getServices = async (req, res) => {
+  try {
+    const waterServices = await getWaterServices();
+    return res.json({ message: 'Water services fetched successfully', waterServices });
+  } catch (error) {
+    console.error('getServices error:', error);
     return res.status(500).json({ error: error.message });
   }
 };

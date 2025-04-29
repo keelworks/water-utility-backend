@@ -46,7 +46,7 @@ CREATE TABLE user_details (
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     -- date_of_birth DATE,
-    -- gender VARCHAR(20),
+    gender VARCHAR(20),
     profile_picture_url VARCHAR(255),
     -- id_proof_type VARCHAR(50),
     -- id_proof_number VARCHAR(100),

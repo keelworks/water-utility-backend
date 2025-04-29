@@ -14,9 +14,6 @@ const UserDetails = sequelize.define('UserDetail', {
     last_name: {
       type: DataTypes.STRING(100)
     },
-    date_of_birth: {
-      type: DataTypes.DATEONLY
-    },
     gender: {
       type: DataTypes.STRING(20)
     },

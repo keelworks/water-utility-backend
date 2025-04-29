@@ -6,14 +6,9 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // US phone regex: (123) 456‑7890 or 123‑456‑7890 or 123.456.7890 or 1234567890
 const phoneRegex = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
 
-function validateOnboarding(req, res, next) {
-  const {
-    first_name,
-    last_name,
-    email,
-    phone,
-    address
-  } = req.body;
+function validateOnboarding() {
+  return async  (req, res, next) => {
+  const { first_name, last_name, email, phone, address } = req.body;
 
   const errors = [];
 
@@ -53,5 +48,6 @@ function validateOnboarding(req, res, next) {
   // everything looks good
   next();
 }
+}
 
-module.exports = { validateOnboarding };
+module.exports = validateOnboarding ;

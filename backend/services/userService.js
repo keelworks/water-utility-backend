@@ -1,5 +1,6 @@
 // services/userService.js
-const { User, UserDetails, Address, sequelize } = require('../models');
+const { User, UserDetails, Address } = require('../models');
+const sequelize = require('../config/db');
 
 /**
  * Upsert the onboarding details and primary address for a logged-in user.
@@ -22,9 +23,9 @@ const { User, UserDetails, Address, sequelize } = require('../models');
  *   }
  * @returns {Promise<{ userDetails: UserDetails, address: Address }>}
  */
-async function upsertOnboarding(firebaseUid, data) {
+async function upsertOnboarding(data) {
   // 1️⃣ Find the core User record
-  const user = await User.findOne({ where: { firebase_uid: firebaseUid } });
+  const user = await User.findOne({ where: { email: data.email } });
   if (!user) {
     const err = new Error('User not found');
     err.statusCode = 404;
