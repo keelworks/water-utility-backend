@@ -46,7 +46,7 @@ CREATE TABLE user_details (
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     -- date_of_birth DATE,
-    -- gender VARCHAR(20),
+    gender VARCHAR(20),
     profile_picture_url VARCHAR(255),
     -- id_proof_type VARCHAR(50),
     -- id_proof_number VARCHAR(100),
@@ -64,7 +64,7 @@ CREATE TABLE user_details (
 -- Create Addresses table
 CREATE TABLE addresses (
     address_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES user_details(user_detail_id) ON DELETE CASCADE,
     -- address_type VARCHAR(20) NOT NULL CHECK (address_type IN ('billing', 'service', 'mailing')),
     address_line_1 VARCHAR(255) NOT NULL,
     address_line_2 VARCHAR(255),
