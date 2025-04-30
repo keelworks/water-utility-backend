@@ -61,12 +61,12 @@ async function upsertOnboarding(data) {
 
     // 4️⃣ Upsert primary Address
     let address = await Address.findOne({
-      where: { user_id: userDetails.user_detail_id, is_primary: true },
+      where: { user_detail_id: userDetails.user_detail_id, is_primary: true },
       transaction
     });
 
     const addrPayload = {
-      user_id: userDetails.user_detail_id,
+      user_detail_id: userDetails.user_detail_id,
       address_line_1: data.address.address_line_1,
       address_line_2: data.address.address_line_2 || null,
       city: data.address.city,
