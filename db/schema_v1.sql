@@ -64,7 +64,7 @@ CREATE TABLE user_details (
 -- Create Addresses table
 CREATE TABLE addresses (
     address_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES user_details(user_detail_id) ON DELETE CASCADE,
+    user_detail_id INTEGER REFERENCES user_details(user_detail_id) ON DELETE CASCADE,
     -- address_type VARCHAR(20) NOT NULL CHECK (address_type IN ('billing', 'service', 'mailing')),
     address_line_1 VARCHAR(255) NOT NULL,
     address_line_2 VARCHAR(255),
@@ -78,7 +78,7 @@ CREATE TABLE addresses (
 );
 
 -- Create indexes for addresses
-CREATE INDEX idx_addresses_user_id ON addresses(user_id);
+CREATE INDEX idx_addresses_user_id ON addresses(user_detail_id);
 
 -- Create Water Services table
 CREATE TABLE water_services (
