@@ -22,7 +22,7 @@ services:
       - "6379:6379"
       
   backend:
-    image: node:18 
+    image: node:22-alpine
     container_name: water_service_backend
     working_dir: /app
     volumes:
