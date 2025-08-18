@@ -25,6 +25,24 @@ function authMiddleware(requiredRole = "consumer") {
       next();
     } catch (err) {
       console.error("authMiddleware error:", err);
+
+      // Handle specific Firebase auth errors
+      if (err.code === "auth/id-token-expired") {
+        return res.status(401).json({
+          error: "Token expired",
+          code: "TOKEN_EXPIRED",
+          message:
+            "Please refresh your token using the /api/auth/refresh endpoint",
+        });
+      }
+
+      if (err.code === "auth/invalid-id-token") {
+        return res.status(401).json({
+          error: "Invalid token",
+          code: "INVALID_TOKEN",
+        });
+      }
+
       return res.status(401).json({ error: "Invalid or expired token" });
     }
   };

@@ -64,6 +64,12 @@ const authMiddleware = require("../middlewares/authMiddleware");
  *         idToken:
  *           type: string
  *           example: "eyJhbGciOiJSUzI1NiIsImtpZCI6..."
+ *         refreshToken:
+ *           type: string
+ *           example: "eyJhbGciOiJSUzI1NiIsImtpZCI6..."
+ *         expiresIn:
+ *           type: string
+ *           example: "3600"
  *         user:
  *           type: object
  *     WaterService:
@@ -285,5 +291,69 @@ router.get("/welcome", authMiddleware(), (req, res) => {
  *               $ref: '#/components/schemas/Error'
  */
 router.get("/onboarding/services", authController.getServices);
+
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Refresh access token using refresh token
+ *     tags: [Authentication]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: The refresh token obtained from login
+ *                 example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYzIxZGM3..."
+ *     responses:
+ *       200:
+ *         description: Token refreshed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Token refreshed successfully"
+ *                 idToken:
+ *                   type: string
+ *                   description: New access token
+ *                   example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYzIxZGM3..."
+ *                 refreshToken:
+ *                   type: string
+ *                   description: New refresh token
+ *                   example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYzIxZGM3..."
+ *                 expiresIn:
+ *                   type: string
+ *                   description: Token expiration time in seconds
+ *                   example: "3600"
+ *       400:
+ *         description: Bad request - Missing refresh token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Unauthorized - Invalid or expired refresh token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.post("/refresh", authController.refreshToken);
 
 module.exports = router;

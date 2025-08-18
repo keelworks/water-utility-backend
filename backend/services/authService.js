@@ -148,6 +148,8 @@ async function signInUser({ email, password }) {
 
     return {
       idToken: firebaseToken,
+      refreshToken: responseData.refreshToken,
+      expiresIn: responseData.expiresIn,
       user: {
         user_id: user.user_id,
         email: user.email,
@@ -170,6 +172,52 @@ async function signInUser({ email, password }) {
   }
 }
 
+async function refreshAuthToken(refreshToken) {
+  const firebaseWebApiKey = process.env.FIREBASE_WEB_API_KEY;
+  if (!firebaseWebApiKey) {
+    throw new Error("Firebase Web API Key not configured");
+  }
+
+  try {
+    const response = await fetch(
+      `https://securetoken.googleapis.com/v1/token?key=${firebaseWebApiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          grant_type: "refresh_token",
+          refresh_token: refreshToken,
+        }),
+      }
+    );
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      if (
+        responseData.error?.message === "TOKEN_EXPIRED" ||
+        responseData.error?.message === "INVALID_REFRESH_TOKEN"
+      ) {
+        const err = new Error("Refresh token expired or invalid");
+        err.statusCode = 401;
+        throw err;
+      }
+      throw new Error("Failed to refresh token");
+    }
+
+    return {
+      idToken: responseData.id_token,
+      refreshToken: responseData.refresh_token,
+      expiresIn: responseData.expires_in,
+    };
+  } catch (error) {
+    logger.error("refreshAuthToken error:", error);
+    throw new Error(`Token refresh failed: ${error.message}`);
+  }
+}
+
 async function getWaterServices() {
   try {
     const waterServices = await WaterService.findAll();
@@ -180,4 +228,9 @@ async function getWaterServices() {
   }
 }
 
-module.exports = { registerUser, getWaterServices, signInUser };
+module.exports = {
+  registerUser,
+  getWaterServices,
+  signInUser,
+  refreshAuthToken,
+};
