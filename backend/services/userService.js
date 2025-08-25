@@ -151,6 +151,8 @@ async function getUserProfile(email) {
 
     return {
       user_id: user.user_id,
+      first_name: userDetail?.first_name || null,
+      last_name: userDetail?.last_name || null,
       email: user.email,
       profile_picture: userDetail?.profile_picture_url || null,
       phone_number: user.phone_number,
@@ -194,6 +196,21 @@ async function updateUserProfile(email, updateData) {
       const err = new Error("User not found");
       err.statusCode = 404;
       throw err;
+    }
+
+    if (updateData.first_name || updateData.last_name) {
+      // Validate name formats if provided
+      const nameRegex = /^[a-zA-Z\s]+$/;
+      if (updateData.first_name && !nameRegex.test(updateData.first_name)) {
+        const err = new Error("Invalid first name format");
+        err.statusCode = 400;
+        throw err;
+      }
+      if (updateData.last_name && !nameRegex.test(updateData.last_name)) {
+        const err = new Error("Invalid last name format");
+        err.statusCode = 400;
+        throw err;
+      }
     }
 
     // Validate phone number format if provided

@@ -33,11 +33,17 @@ const validateOnboarding = require("../validators/onboardingValidator");
  *           example: "https://example.com/profile.jpg"
  *         phone_number:
  *           type: string
- *           example: "+1234567890"
+ *           example: "+11234567890"
+ *         first_name:
+ *           type: string
+ *           example: "John"
+ *         last_name:
+ *           type: string
+ *           example: "Doe"
  *         address:
  *           type: string
  *           nullable: true
- *           example: "123 Main Street, NY"
+ *           example: "123 Main Street, NY 10001"
  *         role:
  *           type: string
  *           example: "consumer"
@@ -73,12 +79,20 @@ const validateOnboarding = require("../validators/onboardingValidator");
 
 /**
  * @swagger
- * /api/user/onboarding/user:
+ * /api/user/onboarding:
  *   post:
  *     summary: Submit user onboarding details
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *         description: Firebase JWT token with Bearer prefix
  *     requestBody:
  *       required: true
  *       content:
@@ -166,7 +180,7 @@ const validateOnboarding = require("../validators/onboardingValidator");
  *               $ref: '#/components/schemas/Error'
  */
 router.post(
-  "/onboarding/user",
+  "/onboarding",
   authMiddleware(),
   validateOnboarding(),
   userController.submitOnboarding
@@ -247,6 +261,14 @@ router.get("/profile", authMiddleware(), userController.getProfile);
  *           schema:
  *             type: object
  *             properties:
+ *               first_name:
+ *                 type: string
+ *                 example: "John"
+ *                 description: New first name
+ *               last_name:
+ *                 type: string
+ *                 example: "Doe"
+ *                 description: New last name
  *               profile_picture:
  *                 type: string
  *                 format: uri
@@ -254,11 +276,11 @@ router.get("/profile", authMiddleware(), userController.getProfile);
  *                 description: URL to the new profile picture
  *               phone_number:
  *                 type: string
- *                 example: "+1234567891"
+ *                 example: "+11234567891"
  *                 description: Updated phone number in E.164 format
  *               address:
  *                 type: string
- *                 example: "456 New Street, NY"
+ *                 example: "456 New Street, NY 10001ß"
  *                 description: Updated address as a formatted string
  *             minProperties: 1
  *             description: At least one field must be provided for update
@@ -266,8 +288,10 @@ router.get("/profile", authMiddleware(), userController.getProfile);
  *             update_all:
  *               summary: Update all fields
  *               value:
+ *                 first_name: "John"
+ *                 last_name: "Doe"
  *                 profile_picture: "https://example.com/new-profile.jpg"
- *                 phone_number: "+1234567891"
+ *                 phone_number: "+11234567891"
  *                 address: "456 New Street, New York, NY 10001"
  *             update_phone_only:
  *               summary: Update phone number only

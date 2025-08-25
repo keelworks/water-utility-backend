@@ -8,7 +8,7 @@ const logger = require("../config/logger"); // Assuming you have a logger here
 const { NotFoundError, ValidationError } = require("../Errors");
 const WaterService = require("../models/WaterService"); // Assuming you have a WaterService model
 
-async function registerUser({ email, password, phone, address, role }) {
+async function registerUser({ email, password, phone, role }) {
   let transaction = null;
   let firebaseUid = null;
 
@@ -34,7 +34,7 @@ async function registerUser({ email, password, phone, address, role }) {
         err.statusCode = 400;
         throw err;
       }
-      const phoneRegex = /^\+1\d{10}$/;
+      const phoneRegex = /^\+[1]\d{10}$/;
       if (!phoneRegex.test(phone)) {
         const err = new Error("Invalid phone number format");
         err.statusCode = 400;
@@ -51,6 +51,7 @@ async function registerUser({ email, password, phone, address, role }) {
         userRecord = await admin.auth().getUserByEmail(email);
         logger.info(`Existing user fetched with email: ${email}`);
       } else {
+        console.log(`Error creating user in Firebase: ${error.message}`);
         throw error;
       }
     }
@@ -67,7 +68,6 @@ async function registerUser({ email, password, phone, address, role }) {
         email,
         password_hash: passwordHash,
         phone_number: phone,
-        address,
       },
       { transaction }
     );
@@ -166,6 +166,7 @@ async function signInUser({ email, password }) {
         user_id: user.user_id,
         email: user.email,
         phone_number: user.phone_number,
+        address: user.address,
         status: user.status,
         last_login_at: user.last_login_at,
       },
