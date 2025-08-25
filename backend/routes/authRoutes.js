@@ -26,9 +26,6 @@ const authMiddleware = require("../middlewares/authMiddleware");
  *         phone:
  *           type: string
  *           example: "+1234567890"
- *         address:
- *           type: string
- *           example: "123 Main Street, NY"
  *         role:
  *           type: string
  *           default: "consumer"

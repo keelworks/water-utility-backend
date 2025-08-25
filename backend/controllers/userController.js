@@ -51,11 +51,13 @@ exports.updateProfile = async (req, res) => {
     if (
       !updateData.profile_picture &&
       !updateData.phone_number &&
-      !updateData.address
+      !updateData.address &&
+      !updateData.first_name &&
+      !updateData.last_name
     ) {
       return res.status(400).json({
         error:
-          "At least one field (profile_picture, phone_number, or address) is required for update",
+          "At least one field (profile_picture, phone_number, address, first_name, last_name) is required for update",
       });
     }
 
