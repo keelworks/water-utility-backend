@@ -28,6 +28,18 @@ async function registerUser({ email, password, phone, address, role }) {
         err.statusCode = 400;
         throw err;
       }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        const err = new Error("Invalid email format");
+        err.statusCode = 400;
+        throw err;
+      }
+      const phoneRegex = /^\+1\d{10}$/;
+      if (!phoneRegex.test(phone)) {
+        const err = new Error("Invalid phone number format");
+        err.statusCode = 400;
+        throw err;
+      }
       userRecord = await admin
         .auth()
         .createUser({ email, password, phoneNumber: phone });
@@ -123,11 +135,11 @@ async function signInUser({ email, password }) {
         responseData.error?.message === "INVALID_PASSWORD" ||
         responseData.error?.message === "INVALID_LOGIN_CREDENTIALS"
       ) {
-        const err = new Error("Incorrect current password");
+        const err = new Error("Incorrect password");
         err.statusCode = 401;
         throw err;
       }
-      throw new Error("Failed to verify current password");
+      throw new Error("Failed to verify password");
     }
 
     const firebaseToken = responseData.idToken;
