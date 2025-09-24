@@ -235,42 +235,37 @@ async function updateUserProfile(email, updateData) {
       await user.update(userUpdates, { transaction });
     }
 
-    // Update user details (profile_picture)
+    // Update user details (profile_picture, first_name, last_name)
+    const userDetailUpdates = {};
     if (updateData.profile_picture) {
+      userDetailUpdates.profile_picture_url = updateData.profile_picture;
+    }
+    if (updateData.first_name) {
+      userDetailUpdates.first_name = updateData.first_name;
+    }
+    if (updateData.last_name) {
+      userDetailUpdates.last_name = updateData.last_name;
+    }
+
+    if (Object.keys(userDetailUpdates).length > 0) {
       let userDetail = user.UserDetail;
 
       if (userDetail) {
-        await userDetail.update(
-          { profile_picture_url: updateData.profile_picture },
-          { transaction }
-        );
+        await userDetail.update(userDetailUpdates, { transaction });
       } else {
         // Create user details if they don't exist
         await UserDetails.create(
           {
             user_id: user.user_id,
-            profile_picture_url: updateData.profile_picture,
+            ...userDetailUpdates,
           },
           { transaction }
         );
       }
     }
 
-    // Update address if provided
+    // Update address if provided (handle as object like onboarding)
     if (updateData.address) {
-      // Parse the address string into components (simple parsing)
-      const addressParts = updateData.address.split(", ");
-      const addressLine1 = addressParts[0] || "";
-      const city = addressParts[1] || "";
-      const statePostal = addressParts[2] || "";
-
-      // Extract state and postal code (basic parsing)
-      const statePostalMatch = statePostal.match(
-        /^(.+?)\s+(\d{5}(?:-\d{4})?)$/
-      );
-      const state = statePostalMatch ? statePostalMatch[1] : statePostal;
-      const postalCode = statePostalMatch ? statePostalMatch[2] : "";
-
       const userDetail = user.UserDetail;
       if (userDetail) {
         const primaryAddress =
@@ -280,11 +275,12 @@ async function updateUserProfile(email, updateData) {
 
         const addressPayload = {
           user_detail_id: userDetail.user_detail_id,
-          address_line_1: addressLine1,
-          city: city,
-          state_province: state,
-          postal_code: postalCode,
-          country: "United States",
+          address_line_1: updateData.address.address_line_1,
+          address_line_2: updateData.address.address_line_2 || null,
+          city: updateData.address.city,
+          state_province: updateData.address.state_province,
+          postal_code: updateData.address.postal_code,
+          country: updateData.address.country || "United States",
           is_primary: true,
         };
 
@@ -303,11 +299,12 @@ async function updateUserProfile(email, updateData) {
         await Address.create(
           {
             user_detail_id: newUserDetail.user_detail_id,
-            address_line_1: addressLine1,
-            city: city,
-            state_province: state,
-            postal_code: postalCode,
-            country: "United States",
+            address_line_1: updateData.address.address_line_1,
+            address_line_2: updateData.address.address_line_2 || null,
+            city: updateData.address.city,
+            state_province: updateData.address.state_province,
+            postal_code: updateData.address.postal_code,
+            country: updateData.address.country || "United States",
             is_primary: true,
           },
           { transaction }

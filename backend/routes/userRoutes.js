@@ -279,9 +279,33 @@ router.get("/profile", authMiddleware(), userController.getProfile);
  *                 example: "+11234567891"
  *                 description: Updated phone number in E.164 format
  *               address:
- *                 type: string
- *                 example: "456 New Street, NY 10001ß"
- *                 description: Updated address as a formatted string
+ *                 type: object
+ *                 description: Updated address information
+ *                 properties:
+ *                   address_line_1:
+ *                     type: string
+ *                     example: "456 New Street"
+ *                     description: Street address line 1
+ *                   address_line_2:
+ *                     type: string
+ *                     example: "Apt 2B"
+ *                     description: Street address line 2 (optional)
+ *                   city:
+ *                     type: string
+ *                     example: "New York"
+ *                     description: City name
+ *                   state_province:
+ *                     type: string
+ *                     example: "NY"
+ *                     description: State or province
+ *                   postal_code:
+ *                     type: string
+ *                     example: "10001"
+ *                     description: Postal or ZIP code
+ *                   country:
+ *                     type: string
+ *                     example: "United States"
+ *                     description: Country name (defaults to United States)
  *             minProperties: 1
  *             description: At least one field must be provided for update
  *           examples:
@@ -292,7 +316,13 @@ router.get("/profile", authMiddleware(), userController.getProfile);
  *                 last_name: "Doe"
  *                 profile_picture: "https://example.com/new-profile.jpg"
  *                 phone_number: "+11234567891"
- *                 address: "456 New Street, New York, NY 10001"
+ *                 address:
+ *                   address_line_1: "456 New Street"
+ *                   address_line_2: "Apt 2B"
+ *                   city: "New York"
+ *                   state_province: "NY"
+ *                   postal_code: "10001"
+ *                   country: "United States"
  *             update_phone_only:
  *               summary: Update phone number only
  *               value:
@@ -300,7 +330,12 @@ router.get("/profile", authMiddleware(), userController.getProfile);
  *             update_address_only:
  *               summary: Update address only
  *               value:
- *                 address: "789 Another St, Los Angeles, CA 90210"
+ *                 address:
+ *                   address_line_1: "789 Another Street"
+ *                   city: "Los Angeles"
+ *                   state_province: "CA"
+ *                   postal_code: "90210"
+ *                   country: "United States"
  *     responses:
  *       200:
  *         description: Profile updated successfully with updated user profile data
